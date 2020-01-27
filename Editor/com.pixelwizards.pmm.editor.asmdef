@@ -1,0 +1,17 @@
+{
+    "name": "com.pixelwizards.pmm.editor",
+    "references": [
+        "GUID:959978a620abcd440854f03cf3cacb0d"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
