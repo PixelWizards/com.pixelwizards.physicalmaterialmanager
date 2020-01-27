@@ -4,6 +4,8 @@ com.pixelwizards.physicalmaterialmanager
 Simple dashboard editor for Physic Materials 
 https://docs.unity3d.com/Manual/class-PhysicMaterial.html
 
+![Main Window](Documentation~/MainWindow.png)
+
 Usage
 --------------
 
