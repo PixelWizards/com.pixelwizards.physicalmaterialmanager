@@ -15,6 +15,7 @@ namespace PixelWizards.PhysicalMaterialManager
         public const string BUTTON_CREATEPHYSICALMATERIAL = "Create New";
         public const string BUTTON_CREATELIBRARY = "Create Library";
         public const string BUTTON_DELETEMAT = "Delete";
+        public const string BUTTON_SAVELIBRARY = "Save Changes";
 
         public const string LABEL_GRAVITY = "Gravity";
 
@@ -146,6 +147,7 @@ namespace PixelWizards.PhysicalMaterialManager
                         
                         GUILayout.Space(5f);
 
+                        EditorGUI.BeginChangeCheck();
                         for (var i = 0; i < Control.library.entries.Count; i++)
                         {
                             var entry = Control.library.entries[i];
@@ -155,7 +157,7 @@ namespace PixelWizards.PhysicalMaterialManager
                                 GUILayout.Label(i + ":", GUILayout.Width(30f));
                                 GUILayout.Space(5f);
                                 entry.name = GUILayout.TextField(entry.name, GUILayout.Width(80f));
-                                
+
                                 entry.physicMaterial = (PhysicMaterial)EditorGUILayout.ObjectField(entry.physicMaterial, typeof(PhysicMaterial), false, GUILayout.Width(150f));
                                 GUILayout.Space(5f);
                                 entry.dynamicFriction = EditorGUILayout.Slider(entry.dynamicFriction, 0, 1, GUILayout.Width(150f));
@@ -167,11 +169,11 @@ namespace PixelWizards.PhysicalMaterialManager
                                 entry.bounciness = EditorGUILayout.Slider(entry.bounciness, 0, 1, GUILayout.Width(150f));
                                 entry.physicMaterial.bounciness = entry.bounciness;
                                 GUILayout.Space(5f);
-                                entry.bounceCombine = (PhysicMaterialCombine)EditorGUILayout.EnumPopup(entry.bounceCombine, GUILayout.Width(120f));
-                                entry.physicMaterial.bounceCombine = entry.bounceCombine;
-                                GUILayout.Space(5f);
                                 entry.frictionCombine = (PhysicMaterialCombine)EditorGUILayout.EnumPopup(entry.frictionCombine, GUILayout.Width(120f));
                                 entry.physicMaterial.frictionCombine = entry.frictionCombine;
+                                GUILayout.Space(5f);
+                                entry.bounceCombine = (PhysicMaterialCombine)EditorGUILayout.EnumPopup(entry.bounceCombine, GUILayout.Width(120f));
+                                entry.physicMaterial.bounceCombine = entry.bounceCombine;
                                 GUILayout.Space(5f);
 
                                 if (GUILayout.Button(Loc.BUTTON_DELETEMAT, GUILayout.Width(50f)))
@@ -181,12 +183,19 @@ namespace PixelWizards.PhysicalMaterialManager
                             }
                             GUILayout.EndHorizontal();
                         }
+                        EditorGUI.EndChangeCheck();
+
                         GUILayout.Space(10f);
                         GUILayout.BeginHorizontal();
                         {
                             if (GUILayout.Button(Loc.BUTTON_ADDNEWMAT, GUILayout.Width(250f), GUILayout.Height(35f)))
                             {
                                 Control.AddNewPhysicalMaterial();
+                            }
+ 
+                            if (GUILayout.Button(Loc.BUTTON_SAVELIBRARY, GUILayout.Width(250f), GUILayout.Height(35f)))
+                            {
+                                Control.SaveMaterialLibrary();
                             }
                         }
                         GUILayout.EndHorizontal();

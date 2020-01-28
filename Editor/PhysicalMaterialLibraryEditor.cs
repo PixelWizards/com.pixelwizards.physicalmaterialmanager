@@ -11,9 +11,15 @@ namespace PixelWizards.PhysicalMaterialManager
     [CustomEditor(typeof(PhysicalMaterialLibrary))]
     public class PhysicalMaterialLibraryEditor : Editor
     {
+        private PhysicalMaterialLibrary libraryConfig;
+
+        private void OnEnable()
+        {
+            libraryConfig = (PhysicalMaterialLibrary)target;
+        }
+
         public override void OnInspectorGUI()
         {
-            var libraryConfig = (PhysicalMaterialLibrary)target;
             GUILayout.BeginVertical();
             {
                 GUILayout.Space(10f);

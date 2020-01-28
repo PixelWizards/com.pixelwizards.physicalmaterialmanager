@@ -18,6 +18,13 @@ namespace PixelWizards.PhysicalMaterialManager
             initialized = true;
         }
 
+        public static void SaveMaterialLibrary()
+        {
+            EditorUtility.SetDirty(library);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+
         public static void CreateNewMaterialLibrary()
         {
             var name = EditorUtility.SaveFilePanelInProject(Loc.DIALOG_CREATENEWLIBRARY, "PhysicalMaterialLibrary.asset", "asset", Loc.DIALOG_ENTERFILENAME, "Assets");
@@ -27,7 +34,7 @@ namespace PixelWizards.PhysicalMaterialManager
                 library = ScriptableObject.CreateInstance<PhysicalMaterialLibrary>();
 
                 AssetDatabase.CreateAsset(library, name);
-                AssetDatabase.SaveAssets();
+                SaveMaterialLibrary();
             }
         }
 
@@ -43,7 +50,7 @@ namespace PixelWizards.PhysicalMaterialManager
                 newMat.physicMaterial = physMat;           // create the physicmaterial on disk
                 newMat.name = newMat.physicMaterial.name;
                 library.entries.Add(newMat);
-                AssetDatabase.SaveAssets();
+                SaveMaterialLibrary();
             }
         }
 
@@ -54,8 +61,10 @@ namespace PixelWizards.PhysicalMaterialManager
                 if( library.entries.Contains(entry))
                 {
                     library.entries.Remove(entry);
+                    SaveMaterialLibrary();
                 }
             }
+
         }
     }
 }
