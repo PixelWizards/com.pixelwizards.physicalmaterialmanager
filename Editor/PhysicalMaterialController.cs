@@ -1,6 +1,6 @@
-﻿#define DEBUG_LOGGING
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
+using Loc = PixelWizards.PhysicalMaterialManager.PhysicalMaterialLoc;                                 // string localization table
 
 namespace PixelWizards.PhysicalMaterialManager
 {
@@ -20,7 +20,7 @@ namespace PixelWizards.PhysicalMaterialManager
 
         public static void CreateNewMaterialLibrary()
         {
-            var name = EditorUtility.SaveFilePanelInProject("Create New Physical Material Library", "PhysicalMaterialLibrary.asset", "asset", "Please enter a file name", "Assets");
+            var name = EditorUtility.SaveFilePanelInProject(Loc.DIALOG_CREATENEWLIBRARY, "PhysicalMaterialLibrary.asset", "asset", Loc.DIALOG_ENTERFILENAME, "Assets");
             if (name.Length != 0)
             {
                 // create new scriptable object for the library, save it and then refresh
@@ -28,39 +28,23 @@ namespace PixelWizards.PhysicalMaterialManager
 
                 AssetDatabase.CreateAsset(library, name);
                 AssetDatabase.SaveAssets();
-               // AssetDatabase.Refresh();
-#if DEBUG_LOGGING
-                Debug.Log("Created Physical Library: " + name);
-#endif
             }
         }
 
         public static void AddNewPhysicalMaterial()
         {
-            var newMat = new PhysicalMaterialEntry
-            {
-                physicMaterial = CreatePhysicalMaterial()           // create the physicmaterial on disk
-            };
-            newMat.name = newMat.physicMaterial.name;
-            library.entries.Add(newMat);
-            AssetDatabase.SaveAssets();
-         //   AssetDatabase.Refresh();
-#if DEBUG_LOGGING
-            Debug.Log("Added new material to library");
-#endif
-        }
-
-        public static PhysicMaterial CreatePhysicalMaterial()
-        {
-            var mat = new PhysicMaterial();
-
             // prompt user where to save the file
-            string name = EditorUtility.SaveFilePanelInProject("Save Physical Material", "physicmat.asset", "asset", "Please enter a file name", "Assets/GameData/Audio");
-
-            AssetDatabase.CreateAsset(mat, name);
-            AssetDatabase.SaveAssets();
-         //   AssetDatabase.Refresh();
-            return mat;
+            string name = EditorUtility.SaveFilePanelInProject(Loc.DIALOG_SAVEPHYSICALMATERIAL, "physicmat.asset", "asset", Loc.DIALOG_ENTERFILENAME, "Assets/GameData/Audio");
+            if(name.Length != 0)
+            {
+                var newMat = new PhysicalMaterialEntry();
+                var physMat = new PhysicMaterial();
+                AssetDatabase.CreateAsset(physMat, name);
+                newMat.physicMaterial = physMat;           // create the physicmaterial on disk
+                newMat.name = newMat.physicMaterial.name;
+                library.entries.Add(newMat);
+                AssetDatabase.SaveAssets();
+            }
         }
 
         public static void DeleteMaterialFromLibrary( PhysicalMaterialEntry entry)

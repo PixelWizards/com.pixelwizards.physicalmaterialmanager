@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using Control = PixelWizards.PhysicalMaterialManager.PhysicalMaterialController;
 using Loc = PixelWizards.PhysicalMaterialManager.PhysicalMaterialLoc;                                 // string localization table
@@ -26,6 +24,8 @@ namespace PixelWizards.PhysicalMaterialManager
         public const string HEADER_STATIC = "Static Friction";
         public const string HEADER_DYNAMIC = "Dynamic Friction";
         public const string HEADER_BOUNCINESS = "Bounciness";
+        public const string HEADER_BOUNCECOMBINE = "Bounce Combine";
+        public const string HEADER_FRICTIONCOMBINE = "Friction Combine";
         public const string HEADER_ACTIONS = "Actions";
 
         public const string WINDOW_HEADER = "Manage Physical Material Library";
@@ -33,19 +33,21 @@ namespace PixelWizards.PhysicalMaterialManager
 
         public const string LABEL_LIBRARY = "Material Library:";
         public const string LABEL_SHOWMATERIALLIBRARY = "Open Material Library Editor"; // displayed on the scriptable object
+
+        public const string DIALOG_CREATENEWLIBRARY = "Create New Physical Material Library";
+        public const string DIALOG_SAVEPHYSICALMATERIAL = "Save Physical Material";
+        public const string DIALOG_ENTERFILENAME = "Please enter a file name";
     }
 
     public class PhysicalMaterialEditor : EditorWindow
     {
-        public static Vector2 curWindowSize = Vector2.zero;
-        public static Vector2 minWindowSize = new Vector2(500, 300);
-        public static Vector2 catListScrollPos = Vector2.zero;
-        public static Vector2 itemListScrollPos = Vector2.zero;
+        public static Vector2 minWindowSize = new Vector2(1120, 510);
 
         [MenuItem(Loc.MENUITEMPATH)]
         public static void ShowWindow()
         {
             var thisWindow = GetWindow<PhysicalMaterialEditor>(false, Loc.WINDOWTITLE, true);
+            thisWindow.minSize = minWindowSize;
             thisWindow.Reset();
         }
 
@@ -85,6 +87,10 @@ namespace PixelWizards.PhysicalMaterialManager
                 GUILayout.Space(5f);
                 GUILayout.Label(Loc.HEADER_BOUNCINESS, EditorStyles.boldLabel, GUILayout.Width(150f));
                 GUILayout.Space(5f);
+                GUILayout.Label(Loc.HEADER_BOUNCECOMBINE, EditorStyles.boldLabel, GUILayout.Width(120f));
+                GUILayout.Space(5f);
+                GUILayout.Label(Loc.HEADER_FRICTIONCOMBINE, EditorStyles.boldLabel, GUILayout.Width(120f));
+                GUILayout.Space(5f);
                 GUILayout.Label(Loc.HEADER_ACTIONS, EditorStyles.boldLabel, GUILayout.Width(50f));
             }
             GUILayout.EndHorizontal();
@@ -92,9 +98,6 @@ namespace PixelWizards.PhysicalMaterialManager
         
         private void OnGUI()
         {
-            curWindowSize.x = position.width;
-            curWindowSize.y = position.height;
-
             GUILayout.BeginHorizontal(GUILayout.MinWidth(minWindowSize.x), GUILayout.MinHeight(minWindowSize.y));
             {
                 GUILayout.Space(10f);
@@ -136,7 +139,11 @@ namespace PixelWizards.PhysicalMaterialManager
                         GUILayout.EndHorizontal();
                         GUILayout.Space(10f);
 
-                        RenderColumnHeaders();
+                        if( Control.library.entries.Count > 0)
+                        {
+                            RenderColumnHeaders();
+                        }
+                        
                         GUILayout.Space(5f);
 
                         for (var i = 0; i < Control.library.entries.Count; i++)
@@ -148,25 +155,24 @@ namespace PixelWizards.PhysicalMaterialManager
                                 GUILayout.Label(i + ":", GUILayout.Width(30f));
                                 GUILayout.Space(5f);
                                 entry.name = GUILayout.TextField(entry.name, GUILayout.Width(80f));
-                                if (entry.physicMaterial == null)
-                                {
-                                    if (GUILayout.Button(Loc.BUTTON_CREATEPHYSICALMATERIAL, GUILayout.Width(150f)))
-                                    {
-                                        entry.physicMaterial = Control.CreatePhysicalMaterial();
-                                    }
-                                    GUILayout.Space(480f);
-                                }
-                                else
-                                {
-                                    entry.physicMaterial = (PhysicMaterial)EditorGUILayout.ObjectField(entry.physicMaterial, typeof(PhysicMaterial), false, GUILayout.Width(150f));
-                                    GUILayout.Space(5f);
-                                    entry.dynamicFriction = EditorGUILayout.Slider(entry.dynamicFriction, 0, 1, GUILayout.Width(150f));
-                                    GUILayout.Space(5f);
-                                    entry.staticFriction = EditorGUILayout.Slider(entry.staticFriction, 0, 1, GUILayout.Width(150f));
-                                    GUILayout.Space(5f);
-                                    entry.bounciness = EditorGUILayout.Slider(entry.bounciness, 0, 1, GUILayout.Width(150f));
-                                    GUILayout.Space(5f);
-                                }
+                                
+                                entry.physicMaterial = (PhysicMaterial)EditorGUILayout.ObjectField(entry.physicMaterial, typeof(PhysicMaterial), false, GUILayout.Width(150f));
+                                GUILayout.Space(5f);
+                                entry.dynamicFriction = EditorGUILayout.Slider(entry.dynamicFriction, 0, 1, GUILayout.Width(150f));
+                                entry.physicMaterial.dynamicFriction = entry.dynamicFriction;
+                                GUILayout.Space(5f);
+                                entry.staticFriction = EditorGUILayout.Slider(entry.staticFriction, 0, 1, GUILayout.Width(150f));
+                                entry.physicMaterial.staticFriction = entry.staticFriction;
+                                GUILayout.Space(5f);
+                                entry.bounciness = EditorGUILayout.Slider(entry.bounciness, 0, 1, GUILayout.Width(150f));
+                                entry.physicMaterial.bounciness = entry.bounciness;
+                                GUILayout.Space(5f);
+                                entry.bounceCombine = (PhysicMaterialCombine)EditorGUILayout.EnumPopup(entry.bounceCombine, GUILayout.Width(120f));
+                                entry.physicMaterial.bounceCombine = entry.bounceCombine;
+                                GUILayout.Space(5f);
+                                entry.frictionCombine = (PhysicMaterialCombine)EditorGUILayout.EnumPopup(entry.frictionCombine, GUILayout.Width(120f));
+                                entry.physicMaterial.frictionCombine = entry.frictionCombine;
+                                GUILayout.Space(5f);
 
                                 if (GUILayout.Button(Loc.BUTTON_DELETEMAT, GUILayout.Width(50f)))
                                 {
