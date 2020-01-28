@@ -42,6 +42,7 @@ namespace PixelWizards.PhysicalMaterialManager
 
     public class PhysicalMaterialEditor : EditorWindow
     {
+        public static Vector2 curWindowSize = Vector2.zero;
         public static Vector2 minWindowSize = new Vector2(1050, 510);
         public static Vector2 scrollPosition = Vector2.zero;
 
@@ -79,8 +80,6 @@ namespace PixelWizards.PhysicalMaterialManager
             {
                 GUILayout.Label(Loc.HEADER_INDEX, EditorStyles.boldLabel, GUILayout.Width(30f));
                 GUILayout.Space(5f);
-                //GUILayout.Label(Loc.HEADER_LABEL, EditorStyles.boldLabel, GUILayout.Width(80f));
-                //GUILayout.Space(5f);
                 GUILayout.Label(Loc.HEADER_PHYSICMATERIAL, EditorStyles.boldLabel, GUILayout.Width(150f));
                 GUILayout.Space(5f);
                 GUILayout.Label(Loc.HEADER_STATIC, EditorStyles.boldLabel, GUILayout.Width(150f));
@@ -100,7 +99,7 @@ namespace PixelWizards.PhysicalMaterialManager
         
         private void OnGUI()
         {
-            GUILayout.BeginHorizontal(GUILayout.MinWidth(minWindowSize.x), GUILayout.MinHeight(minWindowSize.y));
+            GUILayout.BeginHorizontal();
             {
                 GUILayout.Space(10f);
                 GUILayout.BeginVertical();
@@ -134,9 +133,8 @@ namespace PixelWizards.PhysicalMaterialManager
                         
                         GUILayout.Space(5f);
 
-                        scrollPosition = GUILayout.BeginScrollView(scrollPosition, false, true);
+                        scrollPosition = GUILayout.BeginScrollView(scrollPosition, false, true, GUILayout.ExpandHeight(true));
                         {
-
                             EditorGUI.BeginChangeCheck();
                             for (var i = 0; i < Control.library.entries.Count; i++)
                             {
