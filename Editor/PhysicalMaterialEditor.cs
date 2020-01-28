@@ -99,104 +99,107 @@ namespace PixelWizards.PhysicalMaterialManager
         
         private void OnGUI()
         {
-            GUILayout.BeginHorizontal();
+            GUILayout.Space(10f);
+            GUILayout.BeginVertical();
             {
                 GUILayout.Space(10f);
-                GUILayout.BeginVertical();
+
+                GUILayout.Label(Loc.WINDOW_HEADER, EditorStyles.boldLabel);
+                GUILayout.Label(Loc.HELP_HEADER, EditorStyles.helpBox);
+
+                GUILayout.Space(10f);
+
+                if (Control.library != null)
                 {
                     GUILayout.Space(10f);
 
-                    GUILayout.Label(Loc.WINDOW_HEADER, EditorStyles.boldLabel);
-                    GUILayout.Label(Loc.HELP_HEADER, EditorStyles.helpBox);
-
-                    GUILayout.Space(10f);
-
-                    if (Control.library != null)
+                    GUILayout.BeginHorizontal();
                     {
                         GUILayout.Space(10f);
 
-                        GUILayout.BeginHorizontal();
-                        {
-                            GUILayout.Space(10f);
-
-                            GUILayout.Label(Loc.LABEL_GRAVITY, GUILayout.Width(150f));
-                            Control.library.gravity = EditorGUILayout.Vector3Field(GUIContent.none, Control.library.gravity);       // read in the gravity desired
-                            Physics.gravity = Control.library.gravity;          // update global gravity
-                        }
-                        GUILayout.EndHorizontal();
-                        GUILayout.Space(10f);
-
-                        if( Control.library.entries.Count > 0)
-                        {
-                            RenderColumnHeaders();
-                        }
-                        
-                        GUILayout.Space(5f);
-
-                        scrollPosition = GUILayout.BeginScrollView(scrollPosition, false, true, GUILayout.ExpandHeight(true));
-                        {
-                            EditorGUI.BeginChangeCheck();
-                            for (var i = 0; i < Control.library.entries.Count; i++)
-                            {
-                                var entry = Control.library.entries[i];
-
-                                GUILayout.BeginHorizontal();
-                                {
-                                    GUILayout.Label(i + ":", GUILayout.Width(30f));
-                                    GUILayout.Space(5f);
-                                    entry.physicMaterial = (PhysicMaterial)EditorGUILayout.ObjectField(entry.physicMaterial, typeof(PhysicMaterial), false, GUILayout.Width(150f));
-                                    GUILayout.Space(5f);
-                                    entry.dynamicFriction = EditorGUILayout.Slider(entry.dynamicFriction, 0, 1, GUILayout.Width(150f));
-                                    entry.physicMaterial.dynamicFriction = entry.dynamicFriction;
-                                    GUILayout.Space(5f);
-                                    entry.staticFriction = EditorGUILayout.Slider(entry.staticFriction, 0, 1, GUILayout.Width(150f));
-                                    entry.physicMaterial.staticFriction = entry.staticFriction;
-                                    GUILayout.Space(5f);
-                                    entry.bounciness = EditorGUILayout.Slider(entry.bounciness, 0, 1, GUILayout.Width(150f));
-                                    entry.physicMaterial.bounciness = entry.bounciness;
-                                    GUILayout.Space(5f);
-                                    entry.frictionCombine = (PhysicMaterialCombine)EditorGUILayout.EnumPopup(entry.frictionCombine, GUILayout.Width(120f));
-                                    entry.physicMaterial.frictionCombine = entry.frictionCombine;
-                                    GUILayout.Space(5f);
-                                    entry.bounceCombine = (PhysicMaterialCombine)EditorGUILayout.EnumPopup(entry.bounceCombine, GUILayout.Width(120f));
-                                    entry.physicMaterial.bounceCombine = entry.bounceCombine;
-                                    GUILayout.Space(5f);
-
-                                    if (GUILayout.Button(Loc.BUTTON_DELETEMAT, GUILayout.Width(50f)))
-                                    {
-                                        Control.DeleteMaterialFromLibrary(entry);
-                                    }
-                                }
-                                GUILayout.EndHorizontal();
-                            }
-                            EditorGUI.EndChangeCheck();
-                        }
-                        GUILayout.EndScrollView();
-
-                        GUILayout.Space(10f);
-                        GUILayout.BeginHorizontal();
-                        {
-                            if (GUILayout.Button(Loc.BUTTON_ADDNEWMAT, GUILayout.Width(250f), GUILayout.Height(35f)))
-                            {
-                                Control.AddNewPhysicalMaterial();
-                            }
-
-                            if( GUILayout.Button(Loc.BUTTON_REFRESHLIBRARY, GUILayout.Width(250f), GUILayout.Height(35f)))
-                            {
-                                Control.RefreshLibrary();
-                            }
- 
-                            if (GUILayout.Button(Loc.BUTTON_SAVELIBRARY, GUILayout.Width(250f), GUILayout.Height(35f)))
-                            {
-                                Control.SaveMaterialLibrary();
-                            }
-                        }
-                        GUILayout.EndHorizontal();
+                        GUILayout.Label(Loc.LABEL_GRAVITY, GUILayout.Width(150f));
+                        Control.library.gravity = EditorGUILayout.Vector3Field(GUIContent.none, Control.library.gravity);       // read in the gravity desired
+                        Physics.gravity = Control.library.gravity;          // update global gravity
                     }
+                    GUILayout.EndHorizontal();
+                    GUILayout.Space(10f);
+
+                    if( Control.library.entries.Count > 0)
+                    {
+                        RenderColumnHeaders();
+                    }
+                        
+                    GUILayout.Space(5f);
+
+                    scrollPosition = GUILayout.BeginScrollView(scrollPosition, false, true, GUILayout.ExpandHeight(true));
+                    {
+                        EditorGUI.BeginChangeCheck();
+                        for (var i = 0; i < Control.library.entries.Count; i++)
+                        {
+                            var entry = Control.library.entries[i];
+
+                            GUILayout.BeginHorizontal();
+                            {
+                                GUILayout.Label(i + ":", GUILayout.Width(30f));
+                                GUILayout.Space(5f);
+                                entry.physicMaterial = (PhysicMaterial)EditorGUILayout.ObjectField(entry.physicMaterial, typeof(PhysicMaterial), false, GUILayout.Width(150f));
+
+                                GUILayout.Space(5f);
+                                entry.dynamicFriction = EditorGUILayout.Slider(entry.dynamicFriction, 0, 1, GUILayout.Width(150f));
+                                entry.physicMaterial.dynamicFriction = entry.dynamicFriction;
+
+                                GUILayout.Space(5f);
+                                entry.staticFriction = EditorGUILayout.Slider(entry.staticFriction, 0, 1, GUILayout.Width(150f));
+                                entry.physicMaterial.staticFriction = entry.staticFriction;
+
+                                GUILayout.Space(5f);
+                                entry.bounciness = EditorGUILayout.Slider(entry.bounciness, 0, 1, GUILayout.Width(150f));
+                                entry.physicMaterial.bounciness = entry.bounciness;
+
+                                GUILayout.Space(5f);
+                                entry.frictionCombine = (PhysicMaterialCombine)EditorGUILayout.EnumPopup(entry.frictionCombine, GUILayout.Width(120f));
+                                entry.physicMaterial.frictionCombine = entry.frictionCombine;
+
+                                GUILayout.Space(5f);
+                                entry.bounceCombine = (PhysicMaterialCombine)EditorGUILayout.EnumPopup(entry.bounceCombine, GUILayout.Width(120f));
+                                entry.physicMaterial.bounceCombine = entry.bounceCombine;
+
+                                GUILayout.Space(5f);
+
+                                if (GUILayout.Button(Loc.BUTTON_DELETEMAT, GUILayout.Width(50f)))
+                                {
+                                    Control.DeleteMaterialFromLibrary(entry);
+                                }
+                            }
+                            GUILayout.EndHorizontal();
+                        }
+                        EditorGUI.EndChangeCheck();
+                    }
+                    GUILayout.EndScrollView();
+
+                    GUILayout.Space(10f);
+                    GUILayout.BeginHorizontal();
+                    {
+                        if (GUILayout.Button(Loc.BUTTON_ADDNEWMAT, GUILayout.Width(250f), GUILayout.Height(35f)))
+                        {
+                            Control.AddNewPhysicalMaterial();
+                        }
+
+                        if( GUILayout.Button(Loc.BUTTON_REFRESHLIBRARY, GUILayout.Width(250f), GUILayout.Height(35f)))
+                        {
+                            Control.RefreshLibrary();
+                        }
+ 
+                        if (GUILayout.Button(Loc.BUTTON_SAVELIBRARY, GUILayout.Width(250f), GUILayout.Height(35f)))
+                        {
+                            Control.SaveMaterialLibrary();
+                        }
+                    }
+                    GUILayout.EndHorizontal();
                 }
-                GUILayout.EndVertical();
             }
-            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
+            GUILayout.Space(10f);
         }
     }
 }

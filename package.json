@@ -1,7 +1,7 @@
 {
   "name": "com.pixelwizards.physicalmaterialmanager",
   "displayName": "PixelWizards - Physical Material Manager",
-  "version": "0.1.0-preview.3",
+  "version": "0.1.0-preview.4",
   "unity": "2018.4",
   "description": "Centralized Manager for Physic Materials",
   "author": {
@@ -9,6 +9,5 @@
     "email": "support@pixelwizards.ca",
     "url": "https://github.com/PixelWizards"
   },
-  "keywords": [],
-  "dependencies": {}
+  "keywords": []
 }
