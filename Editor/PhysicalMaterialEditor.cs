@@ -13,7 +13,7 @@ namespace PixelWizards.PhysicalMaterialManager
 
         public const string BUTTON_ADDNEWMAT = "Add New Library Material";
         public const string BUTTON_CREATEPHYSICALMATERIAL = "Create New";
-        public const string BUTTON_CREATELIBRARY = "Create Library";
+        public const string BUTTON_REFRESHLIBRARY = "Refresh Library";
         public const string BUTTON_DELETEMAT = "Delete";
         public const string BUTTON_SAVELIBRARY = "Save Changes";
 
@@ -42,7 +42,8 @@ namespace PixelWizards.PhysicalMaterialManager
 
     public class PhysicalMaterialEditor : EditorWindow
     {
-        public static Vector2 minWindowSize = new Vector2(1120, 510);
+        public static Vector2 minWindowSize = new Vector2(1050, 510);
+        public static Vector2 scrollPosition = Vector2.zero;
 
         [MenuItem(Loc.MENUITEMPATH)]
         public static void ShowWindow()
@@ -78,8 +79,8 @@ namespace PixelWizards.PhysicalMaterialManager
             {
                 GUILayout.Label(Loc.HEADER_INDEX, EditorStyles.boldLabel, GUILayout.Width(30f));
                 GUILayout.Space(5f);
-                GUILayout.Label(Loc.HEADER_LABEL, EditorStyles.boldLabel, GUILayout.Width(80f));
-                GUILayout.Space(5f);
+                //GUILayout.Label(Loc.HEADER_LABEL, EditorStyles.boldLabel, GUILayout.Width(80f));
+                //GUILayout.Space(5f);
                 GUILayout.Label(Loc.HEADER_PHYSICMATERIAL, EditorStyles.boldLabel, GUILayout.Width(150f));
                 GUILayout.Space(5f);
                 GUILayout.Label(Loc.HEADER_STATIC, EditorStyles.boldLabel, GUILayout.Width(150f));
@@ -111,20 +112,6 @@ namespace PixelWizards.PhysicalMaterialManager
 
                     GUILayout.Space(10f);
 
-                    GUILayout.Label(Loc.LABEL_LIBRARY, EditorStyles.boldLabel);
-                    GUILayout.BeginHorizontal();
-                    {
-                        Control.library = (PhysicalMaterialLibrary)EditorGUILayout.ObjectField(Control.library, typeof(PhysicalMaterialLibrary), false);
-                        if( Control.library == null)
-                        {
-                            if( GUILayout.Button(Loc.BUTTON_CREATELIBRARY))
-                            {
-                                Control.CreateNewMaterialLibrary();
-                            }
-                        }
-                    }
-                    GUILayout.EndHorizontal();
-
                     if (Control.library != null)
                     {
                         GUILayout.Space(10f);
@@ -147,43 +134,46 @@ namespace PixelWizards.PhysicalMaterialManager
                         
                         GUILayout.Space(5f);
 
-                        EditorGUI.BeginChangeCheck();
-                        for (var i = 0; i < Control.library.entries.Count; i++)
+                        scrollPosition = GUILayout.BeginScrollView(scrollPosition, false, true);
                         {
-                            var entry = Control.library.entries[i];
 
-                            GUILayout.BeginHorizontal();
+                            EditorGUI.BeginChangeCheck();
+                            for (var i = 0; i < Control.library.entries.Count; i++)
                             {
-                                GUILayout.Label(i + ":", GUILayout.Width(30f));
-                                GUILayout.Space(5f);
-                                entry.name = GUILayout.TextField(entry.name, GUILayout.Width(80f));
+                                var entry = Control.library.entries[i];
 
-                                entry.physicMaterial = (PhysicMaterial)EditorGUILayout.ObjectField(entry.physicMaterial, typeof(PhysicMaterial), false, GUILayout.Width(150f));
-                                GUILayout.Space(5f);
-                                entry.dynamicFriction = EditorGUILayout.Slider(entry.dynamicFriction, 0, 1, GUILayout.Width(150f));
-                                entry.physicMaterial.dynamicFriction = entry.dynamicFriction;
-                                GUILayout.Space(5f);
-                                entry.staticFriction = EditorGUILayout.Slider(entry.staticFriction, 0, 1, GUILayout.Width(150f));
-                                entry.physicMaterial.staticFriction = entry.staticFriction;
-                                GUILayout.Space(5f);
-                                entry.bounciness = EditorGUILayout.Slider(entry.bounciness, 0, 1, GUILayout.Width(150f));
-                                entry.physicMaterial.bounciness = entry.bounciness;
-                                GUILayout.Space(5f);
-                                entry.frictionCombine = (PhysicMaterialCombine)EditorGUILayout.EnumPopup(entry.frictionCombine, GUILayout.Width(120f));
-                                entry.physicMaterial.frictionCombine = entry.frictionCombine;
-                                GUILayout.Space(5f);
-                                entry.bounceCombine = (PhysicMaterialCombine)EditorGUILayout.EnumPopup(entry.bounceCombine, GUILayout.Width(120f));
-                                entry.physicMaterial.bounceCombine = entry.bounceCombine;
-                                GUILayout.Space(5f);
-
-                                if (GUILayout.Button(Loc.BUTTON_DELETEMAT, GUILayout.Width(50f)))
+                                GUILayout.BeginHorizontal();
                                 {
-                                    Control.DeleteMaterialFromLibrary(entry);
+                                    GUILayout.Label(i + ":", GUILayout.Width(30f));
+                                    GUILayout.Space(5f);
+                                    entry.physicMaterial = (PhysicMaterial)EditorGUILayout.ObjectField(entry.physicMaterial, typeof(PhysicMaterial), false, GUILayout.Width(150f));
+                                    GUILayout.Space(5f);
+                                    entry.dynamicFriction = EditorGUILayout.Slider(entry.dynamicFriction, 0, 1, GUILayout.Width(150f));
+                                    entry.physicMaterial.dynamicFriction = entry.dynamicFriction;
+                                    GUILayout.Space(5f);
+                                    entry.staticFriction = EditorGUILayout.Slider(entry.staticFriction, 0, 1, GUILayout.Width(150f));
+                                    entry.physicMaterial.staticFriction = entry.staticFriction;
+                                    GUILayout.Space(5f);
+                                    entry.bounciness = EditorGUILayout.Slider(entry.bounciness, 0, 1, GUILayout.Width(150f));
+                                    entry.physicMaterial.bounciness = entry.bounciness;
+                                    GUILayout.Space(5f);
+                                    entry.frictionCombine = (PhysicMaterialCombine)EditorGUILayout.EnumPopup(entry.frictionCombine, GUILayout.Width(120f));
+                                    entry.physicMaterial.frictionCombine = entry.frictionCombine;
+                                    GUILayout.Space(5f);
+                                    entry.bounceCombine = (PhysicMaterialCombine)EditorGUILayout.EnumPopup(entry.bounceCombine, GUILayout.Width(120f));
+                                    entry.physicMaterial.bounceCombine = entry.bounceCombine;
+                                    GUILayout.Space(5f);
+
+                                    if (GUILayout.Button(Loc.BUTTON_DELETEMAT, GUILayout.Width(50f)))
+                                    {
+                                        Control.DeleteMaterialFromLibrary(entry);
+                                    }
                                 }
+                                GUILayout.EndHorizontal();
                             }
-                            GUILayout.EndHorizontal();
+                            EditorGUI.EndChangeCheck();
                         }
-                        EditorGUI.EndChangeCheck();
+                        GUILayout.EndScrollView();
 
                         GUILayout.Space(10f);
                         GUILayout.BeginHorizontal();
@@ -191,6 +181,11 @@ namespace PixelWizards.PhysicalMaterialManager
                             if (GUILayout.Button(Loc.BUTTON_ADDNEWMAT, GUILayout.Width(250f), GUILayout.Height(35f)))
                             {
                                 Control.AddNewPhysicalMaterial();
+                            }
+
+                            if( GUILayout.Button(Loc.BUTTON_REFRESHLIBRARY, GUILayout.Width(250f), GUILayout.Height(35f)))
+                            {
+                                Control.RefreshLibrary();
                             }
  
                             if (GUILayout.Button(Loc.BUTTON_SAVELIBRARY, GUILayout.Width(250f), GUILayout.Height(35f)))

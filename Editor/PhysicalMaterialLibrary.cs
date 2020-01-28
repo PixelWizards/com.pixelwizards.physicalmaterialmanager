@@ -6,7 +6,6 @@ namespace PixelWizards.PhysicalMaterialManager
     [System.Serializable]
     public class PhysicalMaterialEntry
     {
-        public string name;
         public PhysicMaterial physicMaterial;
         public float dynamicFriction;
         public float staticFriction;
@@ -15,8 +14,8 @@ namespace PixelWizards.PhysicalMaterialManager
         public PhysicMaterialCombine bounceCombine;
     }
 
-    [CreateAssetMenu(fileName = "Physical Material Library", menuName = "WeaponSystem/Weapon Effects", order = 1)]
-    public class PhysicalMaterialLibrary : ScriptableObject
+    [System.Serializable]
+    public class PhysicalMaterialLibrary
     {
         public Vector3 gravity = new Vector3(0, -9.8f, 0);
         public List<PhysicalMaterialEntry> entries = new List<PhysicalMaterialEntry>();

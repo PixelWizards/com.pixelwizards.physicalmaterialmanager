@@ -7,7 +7,7 @@ namespace PixelWizards.PhysicalMaterialManager
 
     public static class PhysicalMaterialController
     {
-        public static PhysicalMaterialLibrary library;
+        public static PhysicalMaterialLibrary library = new PhysicalMaterialLibrary();
         public static bool initialized = false;
 
         public static void Init()
@@ -15,26 +15,40 @@ namespace PixelWizards.PhysicalMaterialManager
             if (initialized)
                 return;
 
+            RefreshLibrary();
+
             initialized = true;
         }
 
         public static void SaveMaterialLibrary()
         {
-            EditorUtility.SetDirty(library);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
         }
 
-        public static void CreateNewMaterialLibrary()
+        public static void RefreshLibrary()
         {
-            var name = EditorUtility.SaveFilePanelInProject(Loc.DIALOG_CREATENEWLIBRARY, "PhysicalMaterialLibrary.asset", "asset", Loc.DIALOG_ENTERFILENAME, "Assets");
-            if (name.Length != 0)
-            {
-                // create new scriptable object for the library, save it and then refresh
-                library = ScriptableObject.CreateInstance<PhysicalMaterialLibrary>();
+            library.entries.Clear();
 
-                AssetDatabase.CreateAsset(library, name);
-                SaveMaterialLibrary();
+            string[] guids;
+
+            // search for a ScriptObject called ScriptObj
+            guids = AssetDatabase.FindAssets("t:PhysicMaterial");
+            foreach (string guid in guids)
+            {
+                var matpath = AssetDatabase.GUIDToAssetPath(guid);
+                var physMat = (PhysicMaterial) AssetDatabase.LoadAssetAtPath(matpath, typeof(PhysicMaterial));
+                var matEntry = new PhysicalMaterialEntry()
+                {
+                    physicMaterial = physMat,
+                    dynamicFriction = physMat.dynamicFriction,
+                    staticFriction = physMat.staticFriction,
+                    bounciness = physMat.bounciness,
+                    bounceCombine = physMat.bounceCombine,
+                    frictionCombine = physMat.frictionCombine,
+                };
+               
+                library.entries.Add(matEntry);
             }
         }
 
@@ -47,8 +61,7 @@ namespace PixelWizards.PhysicalMaterialManager
                 var newMat = new PhysicalMaterialEntry();
                 var physMat = new PhysicMaterial();
                 AssetDatabase.CreateAsset(physMat, name);
-                newMat.physicMaterial = physMat;           // create the physicmaterial on disk
-                newMat.name = newMat.physicMaterial.name;
+                newMat.physicMaterial = physMat;
                 library.entries.Add(newMat);
                 SaveMaterialLibrary();
             }
