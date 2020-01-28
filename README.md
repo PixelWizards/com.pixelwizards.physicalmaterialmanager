@@ -15,6 +15,8 @@ Add this to your project manifest.json
 
 "com.pixelwizards.physicalmaterialmanager": "https://github.com/PixelWizards/com.pixelwizards.physicalmaterialmanager.git",
 
+You can find the via Window->Audio->Physical Material Editor
+
 Prerequistes
 ---------------
 * This has been tested for `>= 2018.3`
