@@ -4,12 +4,22 @@ using Loc = PixelWizards.PhysicalMaterialManager.PhysicalMaterialLoc;           
 
 namespace PixelWizards.PhysicalMaterialManager
 {
-
+    /// <summary>
+    /// PhysicMaterial library controller
+    /// </summary>
     public static class PhysicalMaterialController
     {
-        public static PhysicalMaterialLibrary library = new PhysicalMaterialLibrary();
-        public static bool initialized = false;
+        private static PhysicalMaterialLibrary library = new PhysicalMaterialLibrary();
+        private static bool initialized = false;
 
+        /// <summary>
+        /// The PhysicMaterial library
+        /// </summary>
+        public static PhysicalMaterialLibrary Library { get => library; set => library = value; }
+
+        /// <summary>
+        /// Entry point, initialization of the controller
+        /// </summary>
         public static void Init()
         {
             if (initialized)
@@ -20,15 +30,21 @@ namespace PixelWizards.PhysicalMaterialManager
             initialized = true;
         }
 
+        /// <summary>
+        /// saves any dirties objects and refreshes the asset db
+        /// </summary>
         public static void SaveMaterialLibrary()
         {
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
         }
 
+        /// <summary>
+        /// refreshes the physicmaterial library from the project
+        /// </summary>
         public static void RefreshLibrary()
         {
-            library.entries.Clear();
+            Library.entries.Clear();
 
             string[] guids;
 
@@ -48,10 +64,13 @@ namespace PixelWizards.PhysicalMaterialManager
                     frictionCombine = physMat.frictionCombine,
                 };
                
-                library.entries.Add(matEntry);
+                Library.entries.Add(matEntry);
             }
         }
 
+        /// <summary>
+        /// Creates a new PhysicMaterial - prompts for save location and adds it to the list
+        /// </summary>
         public static void AddNewPhysicalMaterial()
         {
             // prompt user where to save the file
@@ -62,18 +81,22 @@ namespace PixelWizards.PhysicalMaterialManager
                 var physMat = new PhysicMaterial();
                 AssetDatabase.CreateAsset(physMat, name);
                 newMat.physicMaterial = physMat;
-                library.entries.Add(newMat);
+                Library.entries.Add(newMat);
                 SaveMaterialLibrary();
             }
         }
 
+        /// <summary>
+        /// removes the selected entry from the library. note: currently does not remove the asset on disk
+        /// </summary>
+        /// <param name="entry"></param>
         public static void DeleteMaterialFromLibrary( PhysicalMaterialEntry entry)
         {
             if( entry != null)
             {
-                if( library.entries.Contains(entry))
+                if( Library.entries.Contains(entry))
                 {
-                    library.entries.Remove(entry);
+                    Library.entries.Remove(entry);
                     SaveMaterialLibrary();
                 }
             }

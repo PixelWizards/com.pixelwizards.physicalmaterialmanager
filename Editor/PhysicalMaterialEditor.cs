@@ -5,6 +5,9 @@ using Loc = PixelWizards.PhysicalMaterialManager.PhysicalMaterialLoc;           
 
 namespace PixelWizards.PhysicalMaterialManager
 {
+    /// <summary>
+    /// strings db
+    /// </summary>
     public static class PhysicalMaterialLoc
     {
         public const string MENUITEMPATH = "Window/Audio/Physical Material Editor";
@@ -40,41 +43,36 @@ namespace PixelWizards.PhysicalMaterialManager
         public const string DIALOG_ENTERFILENAME = "Please enter a file name";
     }
 
+    /// <summary>
+    /// Central dashboard for editing / managing the PhysicMaterials in your project
+    /// </summary>
     public class PhysicalMaterialEditor : EditorWindow
     {
-        public static Vector2 curWindowSize = Vector2.zero;
-        public static Vector2 minWindowSize = new Vector2(1050, 510);
-        public static Vector2 scrollPosition = Vector2.zero;
+        private static Vector2 minWindowSize = new Vector2(1050, 510);
+        private static Vector2 scrollPosition = Vector2.zero;
 
+        /// <summary>
+        /// Opens the PhysicalMaterial GUI 
+        /// </summary>
         [MenuItem(Loc.MENUITEMPATH)]
-        public static void ShowWindow()
+        private static void ShowWindow()
         {
             var thisWindow = GetWindow<PhysicalMaterialEditor>(false, Loc.WINDOWTITLE, true);
             thisWindow.minSize = minWindowSize;
             thisWindow.Reset();
         }
 
-        public static void ShowWindow(PhysicalMaterialLibrary thisLibrary)
-        {
-            if( thisLibrary != null)
-            {
-                Control.library = thisLibrary;
-            }
-            var thisWindow = GetWindow<PhysicalMaterialEditor>(false, Loc.WINDOWTITLE, true);
-            thisWindow.Reset();
-        }
-
-        public void OnEnable()
+        private void OnEnable()
         {
             Reset();
         }
 
-        public void Reset()
+        private void Reset()
         {
             Control.Init();
         }
 
-        public void RenderColumnHeaders()
+        private void RenderColumnHeaders()
         {
             GUILayout.BeginHorizontal();
             {
@@ -109,7 +107,7 @@ namespace PixelWizards.PhysicalMaterialManager
 
                 GUILayout.Space(10f);
 
-                if (Control.library != null)
+                if (Control.Library != null)
                 {
                     GUILayout.Space(10f);
 
@@ -118,13 +116,13 @@ namespace PixelWizards.PhysicalMaterialManager
                         GUILayout.Space(10f);
 
                         GUILayout.Label(Loc.LABEL_GRAVITY, GUILayout.Width(150f));
-                        Control.library.gravity = EditorGUILayout.Vector3Field(GUIContent.none, Control.library.gravity);       // read in the gravity desired
-                        Physics.gravity = Control.library.gravity;          // update global gravity
+                        Control.Library.gravity = EditorGUILayout.Vector3Field(GUIContent.none, Control.Library.gravity);       // read in the gravity desired
+                        Physics.gravity = Control.Library.gravity;          // update global gravity
                     }
                     GUILayout.EndHorizontal();
                     GUILayout.Space(10f);
 
-                    if( Control.library.entries.Count > 0)
+                    if( Control.Library.entries.Count > 0)
                     {
                         RenderColumnHeaders();
                     }
@@ -134,9 +132,9 @@ namespace PixelWizards.PhysicalMaterialManager
                     scrollPosition = GUILayout.BeginScrollView(scrollPosition, false, true, GUILayout.ExpandHeight(true));
                     {
                         EditorGUI.BeginChangeCheck();
-                        for (var i = 0; i < Control.library.entries.Count; i++)
+                        for (var i = 0; i < Control.Library.entries.Count; i++)
                         {
-                            var entry = Control.library.entries[i];
+                            var entry = Control.Library.entries[i];
 
                             GUILayout.BeginHorizontal();
                             {
