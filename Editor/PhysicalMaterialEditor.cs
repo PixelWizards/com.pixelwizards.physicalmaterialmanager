@@ -19,6 +19,7 @@ namespace PixelWizards.PhysicalMaterialManager
         public const string BUTTON_REFRESHLIBRARY = "Refresh Library";
         public const string BUTTON_DELETEMAT = "Delete";
         public const string BUTTON_SAVELIBRARY = "Save Changes";
+        public const string BUTTON_APPLY = "Apply";
 
         public const string LABEL_GRAVITY = "Gravity";
 
@@ -76,7 +77,10 @@ namespace PixelWizards.PhysicalMaterialManager
         {
             GUILayout.BeginHorizontal();
             {
-                GUILayout.Label(Loc.HEADER_INDEX, EditorStyles.boldLabel, GUILayout.Width(30f));
+                //GUILayout.Label(Loc.HEADER_INDEX, EditorStyles.boldLabel, GUILayout.Width(30f));
+                //GUILayout.Space(5f);
+                GUILayout.Space(10f);
+                GUILayout.Label(Loc.HEADER_ACTIONS, EditorStyles.boldLabel, GUILayout.Width(50f));
                 GUILayout.Space(5f);
                 GUILayout.Label(Loc.HEADER_PHYSICMATERIAL, EditorStyles.boldLabel, GUILayout.Width(150f));
                 GUILayout.Space(5f);
@@ -89,8 +93,7 @@ namespace PixelWizards.PhysicalMaterialManager
                 GUILayout.Label(Loc.HEADER_BOUNCECOMBINE, EditorStyles.boldLabel, GUILayout.Width(120f));
                 GUILayout.Space(5f);
                 GUILayout.Label(Loc.HEADER_FRICTIONCOMBINE, EditorStyles.boldLabel, GUILayout.Width(120f));
-                GUILayout.Space(5f);
-                GUILayout.Label(Loc.HEADER_ACTIONS, EditorStyles.boldLabel, GUILayout.Width(50f));
+                
             }
             GUILayout.EndHorizontal();
         }
@@ -138,7 +141,13 @@ namespace PixelWizards.PhysicalMaterialManager
 
                             GUILayout.BeginHorizontal();
                             {
-                                GUILayout.Label(i + ":", GUILayout.Width(30f));
+                                //GUILayout.Label(i + ":", GUILayout.Width(30f));
+                                //GUILayout.Space(5f);
+                                GUILayout.Space(10f);
+                                if (GUILayout.Button(Loc.BUTTON_APPLY, GUILayout.Width(50f)))
+                                {
+                                    Control.ApplyMaterialToSelection(entry);
+                                }
                                 GUILayout.Space(5f);
                                 entry.physicMaterial = (PhysicMaterial)EditorGUILayout.ObjectField(entry.physicMaterial, typeof(PhysicMaterial), false, GUILayout.Width(150f));
 
@@ -164,10 +173,11 @@ namespace PixelWizards.PhysicalMaterialManager
 
                                 GUILayout.Space(5f);
 
-                                if (GUILayout.Button(Loc.BUTTON_DELETEMAT, GUILayout.Width(50f)))
-                                {
-                                    Control.DeleteMaterialFromLibrary(entry);
-                                }
+                                //if (GUILayout.Button(Loc.BUTTON_DELETEMAT, GUILayout.Width(50f)))
+                                //{
+                                //    Control.DeleteMaterialFromLibrary(entry);
+                                //}
+                               
                             }
                             GUILayout.EndHorizontal();
                         }

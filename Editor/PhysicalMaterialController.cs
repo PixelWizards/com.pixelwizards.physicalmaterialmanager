@@ -86,6 +86,23 @@ namespace PixelWizards.PhysicalMaterialManager
             }
         }
 
+        public static void ApplyMaterialToSelection(PhysicalMaterialEntry thisEntry)
+        {
+            if (Selection.gameObjects.Length < 1)
+                return;
+
+            foreach( var go in Selection.gameObjects)
+            {
+                var colliders = go.GetComponentsInChildren<Collider>();
+                if( colliders.Length > 0)
+                {
+                    foreach( var collider in colliders)
+                    {
+                        collider.material = thisEntry.physicMaterial;
+                    }
+                }
+            }
+        }
         /// <summary>
         /// removes the selected entry from the library. note: currently does not remove the asset on disk
         /// </summary>
