@@ -49,7 +49,7 @@ namespace PixelWizards.PhysicalMaterialManager
     /// </summary>
     public class PhysicalMaterialEditor : EditorWindow
     {
-        private static Vector2 minWindowSize = new Vector2(1050, 510);
+        private static Vector2 minWindowSize = new Vector2(975, 510);
         private static Vector2 scrollPosition = Vector2.zero;
 
         /// <summary>
